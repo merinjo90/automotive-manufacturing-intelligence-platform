@@ -34,9 +34,35 @@ def generate_supplier_deliveries(num_records):
             "ordered_quantity": 1000,
             "delivered_quantity": 1000,
             "accepted_quantity": 950,
-            "rejected_quantity": rejected_quantity,
+            "rejected_quantity": 50,
             "delivery_status": "LATE",
         }
+
+        if should_create_invalid_record(0.05):
+            corruption_functions = [
+                corrupt_missing_delivery_id,
+                corrupt_invalid_status,
+                corrupt_quantity_mismatch,
+            ]
+            chosen_corruption = random.choice(corruption_functions)
+            record = chosen_corruption(record)
+
+
         records.append(record)
 
     return records
+
+
+def corrupt_missing_delivery_id(record):
+    record["delivery_id"] = ""
+    return record
+
+def corrupt_invalid_status(record):
+    record["delivery_status"] = "UNKNOWN STATUS"
+    return record
+
+def corrupt_quantity_mismatch(record):
+    record["accepted_quantity"]= 500
+    record["rejected_quantity"] = 300
+    record["delivered_quantity"] = 1000
+    return record
