@@ -19,3 +19,13 @@ def load_tracking_log(tracking_path):
 
     with open(tracking_path) as file:
         return json.load(file)
+
+
+def was_file_processed(tracking_path, file_hash):
+    tracking_log = load_tracking_log(tracking_path)
+
+    for entry in tracking_log:
+        if entry["file_hash"] == file_hash:
+            return True
+
+    return False
