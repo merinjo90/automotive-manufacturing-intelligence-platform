@@ -2,3 +2,5 @@ venv/
 __pycache__/
 sample_output.csv
 data/bronze/
+data/tracking/
+src/common/scratch_test.py
