@@ -1,0 +1,70 @@
+# Approved reference values for Silver validation.
+# One source of truth for all four datasets. Synthetic data only.
+
+supplier_ids:
+  - SUP001
+  - SUP002
+  - SUP003
+
+component_ids:
+  - COMP001
+  - COMP002
+  - COMP003
+
+plant_ids:
+  - PLANT01
+  - PLANT02
+
+production_line_ids:
+  - LINE01
+  - LINE02
+  - LINE03
+
+machine_ids:
+  - MACH001
+  - MACH002
+  - MACH003
+
+vehicle_model_ids:
+  - MODEL_A
+  - MODEL_B
+  - MODEL_C
+
+vehicle_ids:
+  - VEH001
+  - VEH002
+  - VEH003
+
+defect_codes:
+  - SCRATCH
+  - DIMENSION_ERROR
+  - ELECTRICAL_FAULT
+
+downtime_reasons:
+  - MECHANICAL_FAILURE
+  - ELECTRICAL_FAULT
+  - SCHEDULED_MAINTENANCE
+
+delivery_statuses:
+  - ON_TIME
+  - LATE
+
+production_statuses:
+  - COMPLETED
+  - IN_PROGRESS
+  - CANCELLED
+
+inspection_results:
+  - PASS
+  - FAIL
+
+# Empty severity is allowed only on PASS rows (checked by a Silver rule).
+defect_severities:
+  - MINOR
+  - MAJOR
+  - CRITICAL
+
+# Quoted: unquoted True/False would become booleans, but the CSV holds text.
+planned_flags:
+  - "True"
+  - "False"
