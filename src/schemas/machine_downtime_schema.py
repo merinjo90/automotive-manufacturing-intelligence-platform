@@ -1,5 +1,4 @@
 from pyspark.sql.types import (
-    BooleanType,
     DateType,
     IntegerType,
     StringType,
@@ -14,6 +13,6 @@ MACHINE_DOWNTIME_SCHEMA = StructType([
     StructField("start_timestamp", DateType(), True),
     StructField("end_timestamp", DateType(), True),
     StructField("downtime_reason", StringType(), True),
-    StructField("planned_flag", BooleanType(), True),
+    StructField("planned_flag", StringType(), True),
     StructField("production_loss_units", IntegerType(), True),
 ])
