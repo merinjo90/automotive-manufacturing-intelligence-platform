@@ -68,3 +68,10 @@ defect_severities:
 planned_flags:
   - "True"
   - "False"
+
+# Expected planned_flag per downtime reason, used by MD_PLAN_MISMATCH.
+# "any" means both flags are allowed (a business decision per reason).
+downtime_reason_planned_flag:
+  SCHEDULED_MAINTENANCE: "True"
+  MECHANICAL_FAILURE: "False"
+  ELECTRICAL_FAULT: "False"
