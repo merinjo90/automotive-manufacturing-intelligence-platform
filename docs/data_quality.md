@@ -75,6 +75,7 @@ production target achievement KPI.
 | MD_FLAG_INVALID | planned_flag NULL or not in planned_flags | Planned flag is missing or invalid |
 | MD_TIME_MISSING | start or end timestamp is NULL | Start or end time is missing |
 | MD_TIME_ORDER | end_timestamp < start_timestamp | End date is before start date |
+| MD_LOSS_MISSING | production_loss_units is NULL | Production loss is missing |
 | MD_LOSS_NEGATIVE | production_loss_units < 0 | Production loss cannot be negative |
 | MD_PLAN_MISMATCH | planned_flag contradicts the expected flag for the downtime reason | Planned flag contradicts the downtime reason |
 
@@ -85,6 +86,10 @@ production target achievement KPI.
   same-day events. With timestamps, rejecting equal times would be reviewed.
 - **NULL handling:** list checks test NULL explicitly, because in Spark
   `NULL isin (...)` returns NULL instead of false.
+- **NULL numeric values:** a NULL production_loss_units passes the `< 0`
+  check (the comparison returns NULL) and is ignored by `SUM()`, so the
+  production-loss KPI would be too low. MD_LOSS_MISSING quarantines it; NULL
+  is never replaced with 0, because that would be a guess.
 - **Text flags:** planned_flag values are text ("True", "False") and are quoted
   in the YAML file so they are not parsed as booleans.
 
@@ -98,3 +103,5 @@ Found by data profiling; scheduled to be fixed in the generators:
   MD_PLAN_MISMATCH quarantines them.
 - Downtime and production times have date precision only, so downtime
   duration in hours cannot be calculated yet.
+- About 49% of downtime events (98 of 200) have zero production loss;
+  whether this is linked to the downtime reason is still to be checked.

@@ -49,6 +49,7 @@ def test_valid_row_passes_every_rule(spark):
         ({"start_timestamp": None}, "MD_TIME_MISSING"),
         ({"end_timestamp": date(2026, 3, 1)}, "MD_TIME_ORDER"),
         ({"production_loss_units": -20}, "MD_LOSS_NEGATIVE"),
+        ({"production_loss_units": None}, "MD_LOSS_MISSING"),
         ({"planned_flag": "True"}, "MD_PLAN_MISMATCH"),
         (
             {"downtime_reason": "SCHEDULED_MAINTENANCE", "planned_flag": "False"},

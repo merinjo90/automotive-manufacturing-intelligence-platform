@@ -61,6 +61,11 @@ def machine_downtime_rules(reference):
             F.col("end_timestamp") < F.col("start_timestamp"),
         ),
         (
+            "MD_LOSS_MISSING",
+            "Production loss is missing",
+            F.col("production_loss_units").isNull(),
+        ),
+        (
             "MD_LOSS_NEGATIVE",
             "Production loss cannot be negative",
             F.col("production_loss_units") < 0,
