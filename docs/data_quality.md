@@ -21,14 +21,15 @@ company or production system.
 
 | Rule ID | Row is rejected if | Reason |
 |---|---|---|
-| SD_ID_MISSING | delivery_id is NULL | Delivery ID is missing |
+| SD_ID_MISSING | delivery_id NULL or blank | Delivery ID is missing |
 | SD_SUPPLIER_UNKNOWN | supplier_id NULL or not in supplier_ids | Supplier is not in the supplier master |
 | SD_COMPONENT_UNKNOWN | component_id NULL or not in component_ids | Component is not in the component master |
 | SD_PLANT_UNKNOWN | plant_id NULL or not in plant_ids | Plant is missing or unknown |
 | SD_STATUS_INVALID | delivery_status NULL or not in delivery_statuses | Delivery status is not an approved value |
 | SD_DATE_MISSING | planned or actual delivery date is NULL | Planned or actual delivery date is missing |
+| SD_QTY_MISSING | any quantity is NULL | A quantity is missing |
 | SD_QTY_NEGATIVE | any quantity < 0 | A quantity is negative |
-| SD_QTY_MISMATCH | accepted + rejected != delivered | Accepted plus rejected does not equal delivered |
+| SD_QTY_MISMATCH | quantities present and >= 0, and accepted + rejected != delivered | Accepted plus rejected does not equal delivered |
 
 ## production_orders (prefix PO_)
 
@@ -92,6 +93,13 @@ production target achievement KPI.
   is never replaced with 0, because that would be a guess.
 - **Text flags:** planned_flag values are text ("True", "False") and are quoted
   in the YAML file so they are not parsed as booleans.
+- **One rule per problem:** SD_QTY_MISMATCH compares totals only when
+  delivered, accepted and rejected are present and not negative, so one bad
+  value fires one rule (like MD_PLAN_MISMATCH). Trade-off: a second error
+  becomes visible only after the first one is fixed.
+- **Delivery dates:** delivery_statuses contain only ON_TIME and LATE (both
+  mean delivered), so an empty actual delivery date is always an error. If a
+  status such as IN_TRANSIT is added, SD_DATE_MISSING must become status-aware.
 
 ## Known source data issues (synthetic generator)
 
@@ -105,3 +113,7 @@ Found by data profiling; scheduled to be fixed in the generators:
   duration in hours cannot be calculated yet.
 - About 49% of downtime events (98 of 200) have zero production loss;
   whether this is linked to the downtime reason is still to be checked.
+- All deliveries have the same quantities (1000 ordered and delivered, 950
+  accepted, 50 rejected), so quantity KPIs are identical for every supplier.
+- With 200 rows and a 5% error rate, the sample has only 3 invalid deliveries;
+  the generators should use a fixed random seed for reproducible samples.
