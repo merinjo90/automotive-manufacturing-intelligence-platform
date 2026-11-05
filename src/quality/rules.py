@@ -8,3 +8,8 @@ def add_failed_rules(df, rules):
     # A NULL condition counts as passed, so each condition must test NULL itself.
     checks = [F.when(condition, F.lit(rule_id)) for rule_id, _, condition in rules]
     return df.withColumn("failed_rules", F.array_compact(F.array(*checks)))
+
+
+def missing_or_not_in(column, allowed):
+    """Return a condition that is True when a value is NULL or not approved."""
+    return F.col(column).isNull() | ~F.col(column).isin(allowed)

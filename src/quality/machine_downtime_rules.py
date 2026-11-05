@@ -2,10 +2,7 @@
 
 from pyspark.sql import functions as F
 
-
-def missing_or_not_in(column, allowed):
-    """Return a condition that is True when a value is NULL or not approved."""
-    return F.col(column).isNull() | ~F.col(column).isin(allowed)
+from src.quality.rules import missing_or_not_in
 
 
 def plan_mismatch(expected_flags):
