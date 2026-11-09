@@ -2,7 +2,12 @@
 
 from pyspark.sql import functions as F
 
-from src.quality.rules import missing_or_not_in
+from src.quality.rules import (
+    all_present_and_non_negative,
+    any_missing,
+    any_negative,
+    missing_or_not_in,
+)
 
 QUANTITY_COLUMNS = [
     "ordered_quantity",
@@ -11,30 +16,6 @@ QUANTITY_COLUMNS = [
     "rejected_quantity",
 ]
 MISMATCH_COLUMNS = ["delivered_quantity", "accepted_quantity", "rejected_quantity"]
-
-
-def any_missing(columns):
-    """Return a condition that is True when any column is NULL."""
-    condition = F.lit(False)
-    for column in columns:
-        condition = condition | F.col(column).isNull()
-    return condition
-
-
-def any_negative(columns):
-    """Return a condition that is True when any column is below zero."""
-    condition = F.lit(False)
-    for column in columns:
-        condition = condition | (F.col(column) < 0)
-    return condition
-
-
-def all_present_and_non_negative(columns):
-    """Return a condition that is True when every column is present and >= 0."""
-    condition = F.lit(True)
-    for column in columns:
-        condition = condition & F.col(column).isNotNull() & (F.col(column) >= 0)
-    return condition
 
 
 def supplier_deliveries_rules(reference):
